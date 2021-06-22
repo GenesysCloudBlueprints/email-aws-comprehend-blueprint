@@ -1,0 +1,17 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Webpack directories
+.webpack
+
+# Terraform files
+.terraform
+.terraform.lock.hcl
+
+# .env
+.env.dev
+.env.local
