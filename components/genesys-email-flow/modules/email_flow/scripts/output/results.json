@@ -1,0 +1,80 @@
+{
+    "version": "1.4.0",
+    "command": "publish",
+    "status": "success",
+    "exitCode": 0,
+    "settings": {
+        "debug": {
+            "value": false,
+            "source": "default value"
+        },
+        "filePath": {
+            "value": "/Users/johncarnell/work2/email-aws-comprehend-blueprint/components/cx-as-code/modules/email_flow/scripts/EmailComprehendFlow.yaml",
+            "source": "command line parameter"
+        },
+        "forceUnlock": {
+            "value": true,
+            "source": "command line parameter"
+        },
+        "homeDir": {
+            "value": "/Users/johncarnell/archy/archyHome",
+            "source": "config file"
+        },
+        "location": {
+            "value": "usw2.pure.cloud",
+            "source": "command line parameter"
+        },
+        "recreate": {
+            "value": false,
+            "source": "default value"
+        }
+    },
+    "output": {
+        "traces": [
+            {
+                "text": "- WARNING! Validation Summary\n  [Type:'ArchValidationIssue', WarningCount:1, ArchObject:[Type:'ArchVariableString', Name:'State.QueueId']]\nThe variable 'State.QueueId' is not used.\n  - Validation Summary Done -- [Name:'EmailAWSComprehendFlow', Type:'ArchFlowInboundEmail']",
+                "type": "warning",
+                "dateTime": "2021-06-23T16:28:58.270Z"
+            },
+            {
+                "text": "- WARNING! Validation Summary\n  [Type:'ArchValidationIssue', WarningCount:1, ArchObject:[Type:'ArchVariableString', Name:'State.QueueId']]\nThe variable 'State.QueueId' is not used.\n  - Validation Summary Done -- [Name:'EmailAWSComprehendFlow', Type:'ArchFlowInboundEmail']",
+                "type": "warning",
+                "dateTime": "2021-06-23T16:28:59.129Z"
+            },
+            {
+                "text": "1 -> [Type:'ArchValidationIssue', WarningCount:1, ArchObject:[Type:'ArchVariableString', Name:'State.QueueId']]\nThe variable 'State.QueueId' is not used.",
+                "type": "warning",
+                "dateTime": "2021-06-23T16:29:03.206Z"
+            },
+            {
+                "text": "WARNING - the flow has 1 warning(s). (see above)",
+                "type": "warning",
+                "dateTime": "2021-06-23T16:29:03.576Z"
+            },
+            {
+                "text": "warning(s) encountered.",
+                "type": "warning",
+                "dateTime": "2021-06-23T16:29:03.576Z"
+            },
+            {
+                "text": "- Architect Scripting warnings will be listed above.",
+                "type": "warning",
+                "dateTime": "2021-06-23T16:29:03.576Z"
+            }
+        ],
+        "debugFilePath": "/Users/johncarnell/archy/archyHome/debug/archy-debug-2021-06-23T16.28.49.862Z.txt",
+        "flowName": "EmailAWSComprehendFlow",
+        "flowInfo": {
+            "url": "https://apps.usw2.pure.cloud/architect/#/inboundemail/flows/301927d6-7f20-4fbd-9e78-28894d1579c1/latest/menu/3f8a392e-f542-42da-a3ea-175eedaeadb2",
+            "id": "301927d6-7f20-4fbd-9e78-28894d1579c1",
+            "checkedInVersion": {
+                "id": "1.0"
+            },
+            "publishedVersion": {
+                "id": "1.0"
+            }
+        }
+    },
+    "startDateTime": "2021-06-23T16:28:49.881Z",
+    "endDateTime": "2021-06-23T16:29:03.732Z"
+}
