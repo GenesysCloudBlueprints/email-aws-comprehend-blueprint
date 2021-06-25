@@ -13,7 +13,6 @@ terraform {
 #
 # Creates a new web-based data integration and then adds a data action that calls out to my AWS lambda.  
 #
-//TODO Need to externalize the URL and the API key and read it out of config or var file
 # 
 
 resource "genesyscloud_integration" "ComprehendDataAction" {

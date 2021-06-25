@@ -15,7 +15,14 @@ Before beginning this part of the tutorial please make sure you have done the fo
 
 # Deployment Steps
 
-1. **Modify the `.env.dev` file in the directory to set `EndpointArn` for the AWS classifier**. Remember, this arn was created when you deployed the AWS Comprehend classifier. If you did not write down the `EndpointArn` you can use the AWS cli command: `aws comprehend list-endpoints` command to retrieve the endpoint. The `EndpointArn` will be in the returned data.
+1. **Create a `.env.dev` file in the `components/aws-classifier-lambda/dev` directory.  This file should contain 2 values: `CLASSIFIER_ARN` and `CLASSIFIER_CONFIDENCE_THRESHOLD`.  The `CLASSIFIER_ARN` should be set to `EndpointArn` created when you setup the modifier.  The `CLASSIFIER_CONFIDENCE_THRESHOLD` is a value between 0 and 1 that signifies the level of confidence you want the lambda to have before returning a classification. For example, if `CLASSIFIER_CONFIDENCE_THRESHOLD` equals .75, that means the classification returned by the AWS classifier must be at or above 75% to return the classification. If the classification falls below this value, the lambda will return a empty string for the classification.  Shown below is an example `.env.dev` file.
+
+```
+CLASSIFIER_ARN=arn:aws:comprehend:us-east-1:000000000000:document-classifier-endpoint/emailclassifier-example-only
+CLASSIFIER_CONFIDENCE_THRESHOLD=.75
+```
+
+If you did not write down the `EndpointArn` you can use the AWS cli command: `aws comprehend list-endpoints` command to retrieve the endpoint. The `EndpointArn` will be in the returned data.
 
 2. **Open a command-line window and in the `email-aws-comprehend-blueprint/components/aws-classifier-lambda` directory run the `npm i` command to download and install all of the third-party packages and dependences**.  
 
@@ -44,4 +51,4 @@ If everything has deployed correctly you should see a JSON payload with the clas
 Your answers may vary slightly.
 
 # Post-Deployment
-At this point both the AWS Comprehend classifier and the microservice we are going to invoke to classify emails should be ready to go. Now, you need to setup the last part of this blueprint: the Genesys Cloud components that will process incoming emails, invoke the classifier and then invoke them <<NOT COMPLETE>>
+At this point both the AWS Comprehend classifier and the microservice we are going to invoke to classify emails should be ready to go. Now, you need to setup the last part of this blueprint: the Genesys Cloud components that will process incoming emails, invoke the AWS classifier and then route the email to the appropriate queue. This code can be found [here](../genesys_email_flow).
