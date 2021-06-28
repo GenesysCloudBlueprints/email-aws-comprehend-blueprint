@@ -25,8 +25,7 @@ resource "null_resource" "deploy_files" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "${path.module}/scripts/manage_flow.py DELETE NA NA"   
-    on_failure = continue
+    command = "${path.module}/scripts/manage_flow.py DELETE NA NA"
   }
 
 }

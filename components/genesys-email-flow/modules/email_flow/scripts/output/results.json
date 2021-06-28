@@ -34,39 +34,39 @@
             {
                 "text": "- WARNING! Validation Summary\n  [Type:'ArchValidationIssue', WarningCount:1, ArchObject:[Type:'ArchVariableString', Name:'State.QueueId']]\nThe variable 'State.QueueId' is not used.\n  - Validation Summary Done -- [Name:'EmailAWSComprehendFlow', Type:'ArchFlowInboundEmail']",
                 "type": "warning",
-                "dateTime": "2021-06-24T20:26:33.019Z"
+                "dateTime": "2021-06-27T22:11:17.633Z"
             },
             {
                 "text": "- WARNING! Validation Summary\n  [Type:'ArchValidationIssue', WarningCount:1, ArchObject:[Type:'ArchVariableString', Name:'State.QueueId']]\nThe variable 'State.QueueId' is not used.\n  - Validation Summary Done -- [Name:'EmailAWSComprehendFlow', Type:'ArchFlowInboundEmail']",
                 "type": "warning",
-                "dateTime": "2021-06-24T20:26:33.979Z"
+                "dateTime": "2021-06-27T22:11:18.552Z"
             },
             {
                 "text": "1 -> [Type:'ArchValidationIssue', WarningCount:1, ArchObject:[Type:'ArchVariableString', Name:'State.QueueId']]\nThe variable 'State.QueueId' is not used.",
                 "type": "warning",
-                "dateTime": "2021-06-24T20:26:37.857Z"
+                "dateTime": "2021-06-27T22:11:22.608Z"
             },
             {
                 "text": "WARNING - the flow has 1 warning(s). (see above)",
                 "type": "warning",
-                "dateTime": "2021-06-24T20:26:38.218Z"
+                "dateTime": "2021-06-27T22:11:22.966Z"
             },
             {
                 "text": "warning(s) encountered.",
                 "type": "warning",
-                "dateTime": "2021-06-24T20:26:38.218Z"
+                "dateTime": "2021-06-27T22:11:22.966Z"
             },
             {
                 "text": "- Architect Scripting warnings will be listed above.",
                 "type": "warning",
-                "dateTime": "2021-06-24T20:26:38.218Z"
+                "dateTime": "2021-06-27T22:11:22.966Z"
             }
         ],
-        "debugFilePath": "/Users/johncarnell/archy/archyHome/debug/archy-debug-2021-06-24T20.26.19.249Z.txt",
+        "debugFilePath": "/Users/johncarnell/archy/archyHome/debug/archy-debug-2021-06-27T22.11.08.782Z.txt",
         "flowName": "EmailAWSComprehendFlow",
         "flowInfo": {
-            "url": "https://apps.usw2.pure.cloud/architect/#/inboundemail/flows/035d0169-703e-4c51-b6bf-3c74a8b24ef3/latest/menu/e5dedcd3-0898-4410-b126-6b948d65b958",
-            "id": "035d0169-703e-4c51-b6bf-3c74a8b24ef3",
+            "url": "https://apps.usw2.pure.cloud/architect/#/inboundemail/flows/455117b4-62ee-4336-8269-dc44ebfdbb0e/latest/menu/f34e02b8-e349-4369-855f-4abd048a3835",
+            "id": "455117b4-62ee-4336-8269-dc44ebfdbb0e",
             "checkedInVersion": {
                 "id": "1.0"
             },
@@ -75,6 +75,6 @@
             }
         }
     },
-    "startDateTime": "2021-06-24T20:26:19.266Z",
-    "endDateTime": "2021-06-24T20:26:38.409Z"
+    "startDateTime": "2021-06-27T22:11:08.796Z",
+    "endDateTime": "2021-06-27T22:11:23.094Z"
 }

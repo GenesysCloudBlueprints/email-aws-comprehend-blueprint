@@ -11,7 +11,7 @@ terraform {
 }
 
 provider "genesyscloud" {
-  sdk_debug          = true
+  sdk_debug          = false
 }
 
 module "classifier_users" {
@@ -42,6 +42,3 @@ module "classifier_email_flow" {
 
   depends_on = [module.classifier_data_actions, module.classifier_queues]
 }
-
-
-

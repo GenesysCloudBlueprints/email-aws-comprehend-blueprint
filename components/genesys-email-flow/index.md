@@ -5,7 +5,7 @@ We are now in the last stage of setting up this blueprint. In this last step, we
 1. Install Terraform
 2. Install the Genesys Cloud CLI
 3. Install Archy
-4. 
+4. Install Python
 
 # Deployment Steps
 
