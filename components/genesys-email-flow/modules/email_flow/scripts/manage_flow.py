@@ -10,8 +10,9 @@ CLIENT_ID = os.environ["GENESYSCLOUD_OAUTHCLIENT_ID"]
 CLIENT_SECRET = os.environ["GENESYSCLOUD_OAUTHCLIENT_SECRET"]
 CLIENT_REGION = os.environ["GENESYSCLOUD_REGION"]
 CLIENT_REGION = os.environ["GENESYSCLOUD_ARCHY_REGION"]
+CLIENT_API_REGION = os.environ["GENESYSCLOUD_API_REGION"]
 
-PureCloudPlatformClientV2.configuration.host = 	"https://api.usw2.pure.cloud"
+PureCloudPlatformClientV2.configuration.host = 	CLIENT_API_REGION
 apiClient = PureCloudPlatformClientV2.api_client.ApiClient().get_client_credentials_token(CLIENT_ID, CLIENT_SECRET)
 architectApi = PureCloudPlatformClientV2.ArchitectApi(apiClient)
 routingApi = PureCloudPlatformClientV2.RoutingApi(apiClient)
@@ -63,7 +64,6 @@ def createArchyFlow():
     results, error = subprocess.Popen(["/bin/bash", "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     flowId = findFlowId()
     print("Archy flow created with flow id: {}\n".format(flowId))
-
 
 def deleteArchyFlow():
     flowId = findFlowId()
