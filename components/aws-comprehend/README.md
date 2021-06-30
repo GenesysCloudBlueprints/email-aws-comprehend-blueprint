@@ -9,8 +9,7 @@ Before beginning this part of the tutorial please make sure you have done the fo
 
 
 # Deployment Steps
-
-In order to deploy train and deploy the classifier you need to take the following steps.
+In order to train and deploy the classifier you need to take the following steps.
 
 **Note**: All AWS CLI commands are assumed to be run from the `components/aws-comprehend` directory.
 
