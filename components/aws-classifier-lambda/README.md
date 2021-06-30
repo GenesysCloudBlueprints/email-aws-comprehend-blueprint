@@ -1,21 +1,21 @@
-After the AWS classifier has been setup, we need to deploy the microservice that will be used to pass the email body from our email flow to the AWS classifier. To implement this microservice, we are going to deploy an AWS lambda fronted by an AWS API gateway endpoint.
+After the AWS classifier has been setup, we need to deploy the microservice that will be used to pass the email body from the Genesys Cloud architect email flow to the AWS classifier. To implement this microservice, we are going to deploy an AWS lambda fronted by an AWS API gateway endpoint.
 
-The lambda in question was built using Typescript and is built and deployed using the [serverless](https://www.serverless.com/) framework.
+The lambda in question was built using Typescript and is built and deployed using the [Serverless](https://www.serverless.com/) framework.
 
 # Pre-Requisites
 Before beginning this part of the tutorial please make sure you have done the following steps:
 
-1. Have a valid AWS account that is able to access and deploy AWS comprehend. 
+1. Have a valid AWS account that is able to access and deploy AWS API Gateway and AWS Lambda. 
 
 2. Have a set of AWS credentials (eg. client id and secret). For more information on setting up your AWS credentials on your local machine see [here](https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html).
 
-3. Install the serverless framework on the machine you are going to run this deploy from. The documentation for downloading and installing the serverless framework can be found [here](https://www.serverless.com/framework/docs/getting-started/).
+3. Install the Serverless framework on the machine you are going to run this deploy from. The documentation for downloading and installing the Serverless framework can be found [here](https://www.serverless.com/framework/docs/getting-started/).
 
 4. Install NodeJS on your machine if you do not already have it. For this blueprint, I used version 14.15.0. If you do not have NodeJS on your machine, I recommend using [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager) to install Node.
 
 # Deployment Steps
 
-1. **Create a `.env.dev` file in the `components/aws-classifier-lambda/dev` directory.  This file should contain 2 values: `CLASSIFIER_ARN` and `CLASSIFIER_CONFIDENCE_THRESHOLD`.  The `CLASSIFIER_ARN` should be set to `EndpointArn` created when you setup the modifier.  The `CLASSIFIER_CONFIDENCE_THRESHOLD` is a value between 0 and 1 that signifies the level of confidence you want the lambda to have before returning a classification. For example, if `CLASSIFIER_CONFIDENCE_THRESHOLD` equals .75, that means the classification returned by the AWS classifier must be at or above 75% to return the classification. If the classification falls below this value, the lambda will return a empty string for the classification.  Shown below is an example `.env.dev` file.
+1. **Create a `.env.dev` file in the `components/aws-classifier-lambda/dev` directory.  This file should contain 2 values: `CLASSIFIER_ARN` and `CLASSIFIER_CONFIDENCE_THRESHOLD`.  The `CLASSIFIER_ARN` should be set to `EndpointArn` created when you trained the classifier (reference the `components/aws-comprehend` on how to train the classifier). The `CLASSIFIER_CONFIDENCE_THRESHOLD` is a value between 0 and 1 that signifies the level of confidence you want the lambda to have before returning a classification. For example, if `CLASSIFIER_CONFIDENCE_THRESHOLD` equals .75, that means the classification returned by the AWS Comprehend classifier must be at or above 75% to return the classification. If the classification falls below this value, the lambda will return an empty string for the classification.  Shown below is an example `.env.dev` file.
 
 ```
 CLASSIFIER_ARN=arn:aws:comprehend:us-east-1:000000000000:document-classifier-endpoint/emailclassifier-example-only
