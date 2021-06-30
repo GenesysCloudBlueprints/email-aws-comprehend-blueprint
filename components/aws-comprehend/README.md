@@ -1,4 +1,4 @@
-This guide will walk you through how to train an AWS Comprehend machine learning classifier to classify email messages sent from this blueprint's Genesys Cloud email flow.  AWS Cloudformation does not have support for the AWS Comprehend API at this point. For the training and deploying the classifier, you will need to use either the AWS management console or the AWS CLI (command line interface) to train the classifier. For this blueprint, we will use the AWS CLI.
+This guide will walk you through how to train an AWS Comprehend machine learning classifier to classify email messages sent from this blueprint's Genesys Cloud email flow. AWS Cloudformation does not have support for the AWS Comprehend API at this point. For the training and deploying the classifier, you will need to use either the AWS management console or the AWS CLI (Command Line Interface) to train the classifier. For this blueprint, we will use the AWS CLI.
 
 # Pre-Requisites
 Before beginning this part of the tutorial please make sure you have done the following steps:
@@ -12,7 +12,7 @@ Before beginning this part of the tutorial please make sure you have done the fo
 
 In order to deploy train and deploy the classifier you need to take the following steps.
 
-**Note**:  All AWS CLI commands are assumed to be run from the `components/aws-comprehend` directory.
+**Note**: All AWS CLI commands are assumed to be run from the `components/aws-comprehend` directory.
 
 1. **Setup the S3 Bucket and copy the training corpus (`components/aws-comprehend/comprehendterm.csv`) to the created S3 bucket** 
    `aws s3api create-bucket --acl private --bucket <<your-bucket-name-here>> --region <<Your region>>` 
@@ -24,14 +24,14 @@ In order to deploy train and deploy the classifier you need to take the followin
    
    `aws iam put-role-policy --role-name EmailClassifierBucketAccessRole --policy-name BucketAccessPolicy --policy-document file://EmailClassifierBucketAccessRole-Permissions.json`
         
-    **NOTE**: The `Arn` returned on the `aws iam create-role` call.  You are going to need it for the `aws create-document-classifier` in the next step.
+    **NOTE**: The `Arn` returned on the `aws iam create-role` call. You are going to need it for the `aws create-document-classifier` in the next step.
 
 3. **Train the AWS Comprehend document classifier.**
     `aws comprehend create-document-classifier --document-classifier-name FinancialServices --data-access-role-arn <<ARN FROM STEP 2 HERE>> --input-data-config S3Uri=s3://<<YOUR BUCKET NAME HERE>> --language-code en` 
 
-     **NOTE**:  It can take several minutes before AWS completes the training of the classifier. You need to monitor the progress and only run step 4 after the classifier training is completed. The AWS CLI command to see your classifier status: 
+     **NOTE**: It can take several minutes before AWS completes the training of the classifier. You need to monitor the progress and only run step 4 after the classifier training is completed. The AWS CLI command to see your classifier status: 
      
-     `aws comprehend list-document-classifiers`  
+     `aws comprehend list-document-classifiers` 
      
     Once your classifier is trained to note of the `DocumentClassifierArn` value. This value will be used in step below.
 
@@ -47,9 +47,9 @@ In order to deploy train and deploy the classifier you need to take the followin
     Take note of the `EndpointArn` for the `emailclassifier` endpoint you created. This value will need to be set when you are deploying the classifier lambda later on
     in the blueprint.
 
-5. **Test the classifier.**  Once the classifier has become `IN_SERVICE` you can test it by issuing the following command. 
+5. **Test the classifier.** Once the classifier has become `IN_SERVICE` you can test it by issuing the following command. 
 
-    `aws comprehend classify-document --text "Hey I had some questions about what I can use my 529 for in regards to my childrens college tuition.  Can I spend the money on things other then tuition" --endpoint-arn <<YOUR EndpointArn>>`
+    `aws comprehend classify-document --text "Hey I had some questions about what I can use my 529 for in regards to my childrens college tuition. Can I spend the money on things other then tuition" --endpoint-arn <<YOUR EndpointArn>>`
 
 # Post-Deployment
 At this point the setup of the AWS Comprehend classifier is complete. Take note of the `EndpointArn` as the value will be used in the next part of the blueprint setup, the deployment of the API Gateway and AWS Lambda that will be used to call the classifier is located [here](../aws-classifier-lambda).
