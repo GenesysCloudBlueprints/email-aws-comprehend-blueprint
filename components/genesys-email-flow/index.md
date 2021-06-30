@@ -1,4 +1,4 @@
-We are now in the last stage of setting up this blueprint. In this last step, we are going to use Genesys Cloud `CX as Code`, the Genesys Cloud CLI (Command Line Interface) and Genesys Cloud's Archy tools to deploy all of the Genesys Cloud objects used to handle the call flow.  
+We are now in the last stage of setting up this blueprint. In this last step, we are going to use Genesys Cloud `CX as Code`, the Genesys Cloud Python SDK and Genesys Cloud's Archy tools to deploy all of the Genesys Cloud objects used to handle the email flow in this blueprint.  
 
 # Pre-Requisites
 
@@ -20,9 +20,9 @@ Once the pre-requisite tools are installed you need to take the following action
 All Genesys Cloud OAuth2 credentials and AWS region configuration used by `CX as Code`is handled through environment variables. 
 The following environment variables need to be set before you run your Terraform configuration
 
-1. `GENESYSCLOUD_OAUTHCLIENT_ID`. The id of the Genesys Cloud OAuth client credential grant the Genesys Cloud `Cx as Code` provider will run under. Information on how to setup a Genesys Cloud OAuth2 client credential grant can be found [here](https://help.mypurecloud.com/articles/create-an-oauth-client/).
+1. `GENESYSCLOUD_OAUTHCLIENT_ID`. The OAuth2 Client id of the Genesys Cloud OAuth2 client credential grant the Genesys Cloud `Cx as Code` provider will run under. Information on how to setup a Genesys Cloud OAuth2 client credential grant can be found [here](https://help.mypurecloud.com/articles/create-an-oauth-client/).
 
-2. `GENESYSCLOUD_OAUTHCLIENT_SECRET`. The secret of the Genesys Cloud OAuth client credential grant the Genesys Cloud `Cx s Code` provider will run under.
+2. `GENESYSCLOUD_OAUTHCLIENT_SECRET`. The OAuth2 secret of the Genesys Cloud OAuth2 client credential grant the Genesys Cloud `Cx s Code` provider will run under.
 
 3. `GENESYSCLOUD_REGION`. The region used by the Genesys Cloud OAuth2 client. Valid values can be found in the `AWS region` field listed [here](https://developer.genesys.cloud/api/rest/).
 
@@ -46,6 +46,7 @@ The following environment variables need to be set before you run your Terraform
 All application configuration for this flow is kept in the `components/genesys-email-flow/dev/flow.auto.tfvars`file. Please configure the parameters contained in the file to values specific to your organization. The values configured this file include:
 
 1. `genesys_email_domain`.  A globally unique name for your Genesys Cloud email domain name.  If you choose a name that already exists, the execution of the `CX as Code` script(s) will fail.
+
 2. `genesys_email_domain_region`. The suffix for the email domain.  Valid values are based on the AWS region.  Valid values include:
    ```
       US East -------> mypurecloud.com
@@ -74,9 +75,10 @@ Terraform requires a backend for storing state.  For purposes of this blueprint,
 ```
 terraform {
   backend "local"  {
-      path ="/Users/johncarnell/genesys_terraform/carnell1_dev/tfstate"   #Point to your own directory and make sure the directory exists.
+      path ="/Users/johncarnell/genesys_terraform/carnell1_dev/tfstate"   #Point to your own directory and make sure the directory exists.  The file
+                                                                          #created will be called tfstate. 
   }
-.....
+.....  # Additional context needed here
 }
 ```
 
@@ -92,10 +94,10 @@ To teardown all of the objects created by these flows run:
 
 `terraform destroy --auto-approve`
 
-At this point, if you have followed all of the steps properly you should now be able to login into your Genesys org and see all of your queues, integration, data action, email archy flow, email domains and routes created.
+At this point, if you have followed all of the steps properly you should now be able to login into your Genesys org and see all of your queues, integration, data action, email architect flow, email domains and routes created.
 
 # Post-Deployment
-This is the end of the setup for this blueprint.  If you followed all three components steps of this blueprint (train the classifier in `components/aws-comprehend`, create the classifier lambda in `aws-classifier-lambda`, and created the genesys objects in `components/genesys-email-flow`) you should now be able to send email to your classifier and route the email to the appropriate queue.  The email that I have been testing will send the user's email to the `IRA` queue:
+This is the end of the setup for this blueprint.  If you followed all three components steps of this blueprint (train the classifier in `components/aws-comprehend`, create the classifier lambda in `aws-classifier-lambda`, and create the genesys objects in `components/genesys-email-flow`) you should now be able to send email to your classifier and route the email to the appropriate queue.  The email that I have been testing will send the user's email to the `IRA` queue:
 
 ```
 1.  Can I rollover my existing 401K to my IRA.  

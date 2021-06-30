@@ -26,7 +26,7 @@ If you did not write down the `EndpointArn` you can use the AWS cli command: `aw
 
 2. **Open a command-line window and in the `email-aws-comprehend-blueprint/components/aws-classifier-lambda` directory run the `npm i` command to download and install all of the third-party packages and dependences**.  
 
-3. **Once the `npm -i` process is complete. Deploy the lambda using `sls deploy` command.** This will take about a minute to deploy and when the lambda is deploy there are two important pieces of information that need to be captured for using when deploying the Genesys Cloud flow:  `api key` and `endpoints`.
+3. **Deploy the lambda using `sls deploy` command.** This will take about a minute to deploy and when the lambda is deploy there are two important pieces of information that need to be captured for using when deploying the Genesys Cloud flow:  `api key` and `endpoints`.
 
 4. **Test the lambda**.  Once the lambda is complete you can test it from the command line by issuing the following command:
 
