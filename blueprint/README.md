@@ -11,8 +11,9 @@ summary: |
 
 This Genesys Cloud Developer Blueprint provides instructions for building a Genesys Cloud email flow that leverages an AWS Comprehend machine learning classifier to classify an email and map the email to a routing queue specific to that email classification. 
 
-In this blueprint we will demonstrate how to train a AWS Machine Learning classifier, leverage AWS Api Gateway and Lambda to build a microservice to provide email classification, and leverage `CX as Code` to deploy all of the Genesys Cloud objects needed to build and support this email flow. For this blueprint, we are going to pretend
-that we are building a solution for a financial services company that has product offerings for 401Ks, IRAs and 529 college savings account. The financial services group has  4 distinct call center groups with agents who specialize in each of these financial service products.  When an email is sent to the company, the company wants to have a Genesys Cloud architect email flow process the email and then use a machine learning model to classify the email. Based on the email contents, the email should be routed to a queue specific to the particular topic area. If the machine learning classifier is unable classify the incoming email, the financial services company wants to send the email to a general support queue.
+In this blueprint we will demonstrate how to train a AWS Machine Learning classifier, leverage an AWS API Gateway endpoint and AWS Lambda to build a microservice to invoke the classifier, and leverage `CX as Code` to deploy all of the Genesys Cloud objects needed for this blueprint. 
+
+For this blueprint, we are going to pretend that we are building a solution for a financial services company that has product offerings for 401Ks, IRAs and 529 college savings account. The financial services group has 3 distinct call center groups with agents who specialize in each of these financial service products. When an email is sent to an email account owned by the organization, the company wants to have a Genesys Cloud architect email flow process the email and then use a machine learning model to classify the email. Based on the email contents, the email should be routed to a queue specific to the particular topic area. If the machine learning classifier is unable classify the incoming email, the financial services company wants to send the email to a general support queue.
 
 For this blueprint we are going to use AWS Comprehend to perform the machine learning classification. The diagram below shows all of the components involved along with the general flow of activity involved in the solution.
 
@@ -24,12 +25,11 @@ The following actions take place in the diagram above:
 
 2. When an email is received the email architect flow will use a Genesys Cloud [data action](https://help.mypurecloud.com/articles/about-the-data-actions-integrations/) to invoke a REST-based service and send the email body and subject to the REST service for classification.
 
-3. A REST service will be expose by [AWS API gateway](https://aws.amazon.com/api-gateway/). The API gateway will forward the request onto an [AWS Lambda](https://aws.amazon.com/lambda/) to process the classification request.  This lambda will be used to invoke an [AWS Comprehend](https://aws.amazon.com/comprehend/) machine learning classifier to classify the email.  If the lambda is able to classify the email at a 75% confidence or higher level, it will return one of categories back to the flow: `401K`, `IRA`, or `529`. The email flow will then lookup the queue and route the email to the queue. If the REST classifier can not reach this level of confidence, the REST service will return an empty string.  In the case, the call flow will fallback to a general support queue.
+3. A REST service will be exposed by [AWS API gateway](https://aws.amazon.com/api-gateway/). The API gateway will forward the request onto an [AWS Lambda](https://aws.amazon.com/lambda/) to process the classification request. This lambda will invoke an [AWS Comprehend](https://aws.amazon.com/comprehend/) classifier endpoint to classify the contents of the email body in real-time. If the lambda is able to classify the email at a 75% confidence or higher level, it will return one of three categories back to the email flow: `401K`, `IRA`, or `529`. The email flow will then lookup the queue id and route the email to the queue. If the REST classifier can not reach this level of confidence, the REST service will return an empty string. In this case, the call flow will fallback to a general support queue.
 
 4. The flow takes the returned classification, looks up the queue with the same name and then routes the email to the targeted queue.
 
 5. When an agent receives the email, they will respond to the customer directly from within the Genesys Cloud application.
-
 
 * [Solution components](#solution-components "Goes to the Solution components section")
 * [Requirements](#requirements "Goes to the Requirements section")
@@ -40,11 +40,11 @@ The following actions take place in the diagram above:
 
 This solution requires the following components:
 
-* **Genesys Cloud** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. You deploy the architect email flow, integration, data actions, queues and email configuration in Genesys Cloud. 
+* **Genesys Cloud**. A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. You deploy the architect email flow, integration, data actions, queues and email configuration in Genesys Cloud. 
 
-* **AWS Comprehend** - AWS Comprehend is an an AWS service that lets your train a machine learning model to classify a body of text. Using AWS Comprehend requires you to first train a classification model and then expose AWS endpoint to allow the service to be invoke for real-time analysis
+* **AWS Comprehend**. AWS Comprehend is an an AWS service that lets your train a machine learning model to classify a body of text. Using AWS Comprehend requires you to first train a classification model and then expose AWS endpoint to allow the service to be invoke for real-time analysis
 
-* **AWS API Gateway and AWS Lambda** - The AWS API gateway is used to exposed a REST endpoint that is protected by an API key.  Requests coming into the API gateway are forwarded to an AWS Lambda (written in Typescript for this example) that will process the request and call the AWS Comprehend endpoint classified defined in the previous bullet.
+* **AWS API Gateway and AWS Lambda**. The AWS API gateway is used to exposed a REST endpoint that is protected by an API key. Requests coming into the API gateway are forwarded to an AWS Lambda (written in Typescript) that will process the request and call the AWS Comprehend endpoint classified defined in the previous bullet.
 
 ## Requirements
 
@@ -69,14 +69,13 @@ This solution requires the following components:
 
 ## Implementation steps
 
-
 1. **Clone the [email-aws-comprehend-blueprint](https://github.com/GenesysCloudBlueprints/email-aws-comprehend-blueprint "Opens the email-aws-comprehend-blueprint repository in GitHub")**.
 
 2. **Train the AWS Comprehend machine learning model**. To train and deploy the AWS Comprehend model, you need leverage the AWS command-line tool. Detailed instructions can for performing this step can be found [here](/components/aws-comprehend). 
 
 3. **Deploy API Gateway and the AWS Lambda**. The API Gateway and the AWS Lambda are built using the [Serverless](https://www.serverless.com/) framework. Detailed instructions for performing this step can be found [here](/components/aws-classifier-lambda).
 
-4. **Deploy the Genesys Cloud objects**.  The Genesys Cloud objects are deployed using [CX as Code](https://developer.genesys.cloud/api/rest/CX-as-Code/). Detailed 
+4. **Deploy the Genesys Cloud objects**. The Genesys Cloud objects are deployed using [CX as Code](https://developer.genesys.cloud/api/rest/CX-as-Code/). Detailed 
 instructions for perform this step can be found [here](/genesys-email-flow).
 
 ## Additional resources
