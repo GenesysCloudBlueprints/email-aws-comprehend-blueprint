@@ -38,9 +38,4 @@ resource "genesyscloud_routing_queue" "Queues" {
       ring_num = 1
     }
   }
-
-  # members {
-  #   user_id  = var.classifier_queue_members
-  #   ring_num = 1
-  # }
 }

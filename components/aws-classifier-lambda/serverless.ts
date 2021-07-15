@@ -32,7 +32,7 @@ const serverlessConfiguration: AWS = {
       Action: [
         "comprehend:ClassifyDocument"
       ],
-      Resource: "arn:aws:comprehend:us-east-1:490606849374:document-classifier-endpoint/emailclassifier"
+      Resource: '${env:CLASSIFIER_ARN}'
 
     }]
   },

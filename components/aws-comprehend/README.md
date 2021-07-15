@@ -18,37 +18,60 @@ In order to train and deploy the classifier you need to take the following steps
    
    `aws s3 cp comprehendterms.csv s3://<<your-bucket-name-here>>`
 
-2. **Define the IAM Role and policy the AWS Comprehend Classifier will use.** 
+
+2. **Modify the `EmailClassifierBucketBucketAccessRole-Permission.json` to point to the S3 bucket just created. Lines 10 and 19 in the file need to be modified**.
+
+3. **Define the IAM Role and policy the AWS Comprehend Classifier will use.** 
    `aws iam create-role --role-name EmailClassifierBucketAccessRole --assume-role-policy-document file://EmailClassifierBucketAccessRole-TrustPolicy.json`
    
    `aws iam put-role-policy --role-name EmailClassifierBucketAccessRole --policy-name BucketAccessPolicy --policy-document file://EmailClassifierBucketAccessRole-Permissions.json`
         
     **NOTE**: The `Arn` returned on the `aws iam create-role` call. You are going to need it for the `aws create-document-classifier` in the next step.
 
-3. **Train the AWS Comprehend document classifier.**
+4. **Train the AWS Comprehend document classifier.**
     `aws comprehend create-document-classifier --document-classifier-name FinancialServices --data-access-role-arn <<ARN FROM STEP 2 HERE>> --input-data-config S3Uri=s3://<<YOUR BUCKET NAME HERE>> --language-code en` 
 
      **NOTE**: It can take several minutes before AWS completes the training of the classifier. You need to monitor the progress and only run step 4 after the classifier training is completed. The AWS CLI command to see your classifier status: 
      
      `aws comprehend list-document-classifiers` 
      
-    Once your classifier is trained to note of the `DocumentClassifierArn` value. This value will be used in step below.
+    Your classifier is trained once the `Status` attribute on the JSON returned from the command above has a value of `TRAINED`. Once your classifier is trained take note of the `DocumentClassifierArn` value. This value will be used in step below.
 
-4. **Create the real-time document classifier endpoint.**
+5. **Create the real-time document classifier endpoint.**
     
-    `aws comprehend create-endpoint --endpoint-name emailclassifier --model-arn <<YOUR DocumentClassifierArn>> here --desired-inference-units 1`
+    `aws comprehend create-endpoint --endpoint-name emailclassifier --model-arn <<YOUR DocumentClassifierArn here>> --desired-inference-units 1`
 
     **NOTE**: It can take several minutes for the real-time classifier endpoint to become active. You can monitor the status of the endpoint by calling:
     
-    `aws-list-endpoints` 
+    `aws comprehend list-endpoints` 
     
-    Look for the your endpoint name (e.g. emailclassifier). When the `Status` is set to `IN_SERVICE` the classifier is ready to be used.
-    Take note of the `EndpointArn` for the `emailclassifier` endpoint you created. This value will need to be set when you are deploying the classifier lambda later on
+    Look for the your endpoint name (e.g. emailclassifier). When the `Status` is set to `IN_SERVICE` the classifier is ready to be used.  Take note of the `EndpointArn` for the `emailclassifier` endpoint you created. This value will need to be set when you are deploying the classifier lambda later on
     in the blueprint.
 
-5. **Test the classifier.** Once the classifier has become `IN_SERVICE` you can test it by issuing the following command. 
+6. **Test the classifier.** Once the classifier has become `IN_SERVICE` you can test it by issuing the following command. 
 
     `aws comprehend classify-document --text "Hey I had some questions about what I can use my 529 for in regards to my childrens college tuition. Can I spend the money on things other then tuition" --endpoint-arn <<YOUR EndpointArn>>`
+
+  If everything is setup correctly, you should see JSON from the command above that looks similar to this:
+
+  ```json
+  {
+    "Classes": [
+        {
+            "Name": "529",
+            "Score": 0.7981914281845093
+        },
+        {
+            "Name": "401K",
+            "Score": 0.14315158128738403
+        },
+        {
+            "Name": "IRA",
+            "Score": 0.0586569607257843
+        }
+    ]
+}
+  ```     
 
 # Post-Deployment
 At this point the setup of the AWS Comprehend classifier is complete. Take note of the `EndpointArn` as the value will be used in the next part of the blueprint setup, the deployment of the API Gateway and AWS Lambda that will be used to call the classifier is located [here](../aws-classifier-lambda).

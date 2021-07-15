@@ -26,7 +26,7 @@ The following environment variables need to be set before you run your Terraform
 
 3. `GENESYSCLOUD_REGION`. The region used by the Genesys Cloud OAuth2 client. Valid values can be found in the `AWS region` field listed [here](https://developer.genesys.cloud/api/rest/).
 
-4. `GENESYSCLOUD_API_REGION`. The Genesys Cloud API endpoint the Genesys Cloud SDK will connect with. Valid values can be found in the `Apps URL` field listed [here](https://developer.genesys.cloud/api/rest/).
+4. `GENESYSCLOUD_API_REGION`. The Genesys Cloud API endpoint the Genesys Cloud SDK will connect with. Valid values can be found in the `API SERVER` field listed [here](https://developer.genesys.cloud/api/rest/).
 
 5. `GENESYSCLOUD_ARCHY_REGION`. The Genesys Cloud domain name that Archy uses to resolve the Genesys Cloud AWS region to connect to. Valid locations include: 
 ```
@@ -96,8 +96,10 @@ To teardown all of the objects created by these flows run:
 
 At this point, if you have followed all of the steps properly you should now be able to login into your Genesys org and see all of your queues, integration, data action, email architect flow, email domains and routes created.
 
+**NOTE:  The Terraform scripts attempts to create an email domain route. Normally,Genesys Cloud, by default, only allows one domain router per organization. If you already have a domain route please use the id of that existing route in this script.  (We are working on data source for email domain routes so we expect this be a temporary issue)  Alternatively, you can contact the Genesys Cloud [CARE](https://help.mypurecloud.com/articles/contact-genesys-cloud-care/) team to request an increase the rate limit be increased for this organization.**
+
 # Post-Deployment
-This is the end of the setup for this blueprint. If you followed all three components steps of this blueprint (train the classifier in `components/aws-comprehend`, create the classifier lambda in `aws-classifier-lambda`, and create the genesys objects in `components/genesys-email-flow`) you should now be able to send email to your classifier and route the email to the appropriate queue. The email that I have been testing will send the user's email to the `IRA` queue:
+This is the end of the setup for this blueprint. If you followed all three components steps of this blueprint (train the classifier in `components/aws-comprehend`, create the classifier lambda in `aws-classifier-lambda`, and create the Genesys objects in `components/genesys-email-flow`) you should now be able to send email to your classifier and route the email to the appropriate queue. The email that I have been testing will send the user's email to the `IRA` queue:
 
 ```
 1. Can I rollover my existing 401K to my IRA. 

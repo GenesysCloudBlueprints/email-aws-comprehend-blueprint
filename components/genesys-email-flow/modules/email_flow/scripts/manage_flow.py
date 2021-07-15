@@ -1,4 +1,3 @@
-#!/usr/local/bin/python3
 import subprocess
 import sys
 import os
@@ -57,9 +56,11 @@ def createEmailRoute():
 
 def createArchyFlow():
     print("Creating Archy flow \n")
-    cmd = "sleep 10 && archy publish --forceUnlock --file={}/EmailComprehendFlow.yaml --clientId {} --clientSecret {} --location {}  --overwriteResultsFile --resultsFile {}/output/results.json && sleep 10".format(
+    time.sleep(10)
+    cmd = "archy publish --forceUnlock --file={}/EmailComprehendFlow.yaml --clientId {} --clientSecret {} --location {}  --overwriteResultsFile --resultsFile {}/output/results.json".format(
         SCRIPT_PATH, CLIENT_ID, CLIENT_SECRET, CLIENT_REGION, SCRIPT_PATH
     )
+    time.sleep(10)
 
     results, error = subprocess.Popen(["/bin/bash", "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     flowId = findFlowId()

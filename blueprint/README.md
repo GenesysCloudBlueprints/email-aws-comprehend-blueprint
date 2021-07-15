@@ -76,7 +76,7 @@ This solution requires the following components:
 3. **Deploy API Gateway and the AWS Lambda**. The API Gateway and the AWS Lambda are built using the [Serverless](https://www.serverless.com/) framework. Detailed instructions for performing this step can be found [here](/components/aws-classifier-lambda).
 
 4. **Deploy the Genesys Cloud objects**. The Genesys Cloud objects are deployed using [CX as Code](https://developer.genesys.cloud/api/rest/CX-as-Code/). Detailed 
-instructions for perform this step can be found [here](/genesys-email-flow).
+instructions for perform this step can be found [here](/components/genesys-email-flow).
 
 ## Additional resources
 
