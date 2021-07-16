@@ -20,12 +20,12 @@ resource "null_resource" "deploy_files" {
 
   #This needs to be python or python3 depending on your OS installation. This was tested using 3.8 of Python
   provisioner "local-exec" {
-    command = "python3 ${path.module}/scripts/manage_flow.py CREATE ${var.genesys_email_domain} ${var.genesys_email_domain_region}"
+    command = " /usr/local/bin/python3 ${path.module}/scripts/manage_flow.py CREATE ${var.genesys_email_domain} ${var.genesys_email_domain_region}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "python3 ${path.module}/scripts/manage_flow.py DELETE NA NA"
+    command = " /usr/local/bin/python3 ${path.module}/scripts/manage_flow.py DELETE NA NA"
   }
 
 }
