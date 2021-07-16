@@ -21,12 +21,15 @@ In order to train and deploy the classifier you need to take the following steps
 
 2. **Modify the `EmailClassifierBucketBucketAccessRole-Permission.json` to point to the S3 bucket just created. Lines 10 and 19 in the file need to be modified**.
 
-3. **Define the IAM Role and policy the AWS Comprehend Classifier will use.** 
+3. **Create the role, create the policy and attach the role to the policy the AWS Comprehend Classifier will use.** 
+
    `aws iam create-role --role-name EmailClassifierBucketAccessRole --assume-role-policy-document file://EmailClassifierBucketAccessRole-TrustPolicy.json`
-   
-   `aws iam put-role-policy --role-name EmailClassifierBucketAccessRole --policy-name BucketAccessPolicy --policy-document file://EmailClassifierBucketAccessRole-Permissions.json`
+
+   `aws iam create-policy --policy-name BucketAccessPolicy --policy-document file://EmailClassifierBucketAccessRole-Permissions.json`
+
+   `aws iam attach-role-policy --policy-arn <<POLICY ARN return from the aws iam create-policy command above>> --role-name EmailClassifierBucketAccessRole`
         
-    **NOTE**: The `Arn` returned on the `aws iam create-role` call. You are going to need it for the `aws create-document-classifier` in the next step.
+    **NOTE**: Document the `Arn` returned on the `aws iam create-role` call. You are going to need it for the `aws create-document-classifier` in the next step.
 
 4. **Train the AWS Comprehend document classifier.**
     `aws comprehend create-document-classifier --document-classifier-name FinancialServices --data-access-role-arn <<ARN FROM STEP 2 HERE>> --input-data-config S3Uri=s3://<<YOUR BUCKET NAME HERE>> --language-code en` 

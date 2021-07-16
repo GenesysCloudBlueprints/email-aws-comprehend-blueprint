@@ -7,7 +7,7 @@
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::inindca-public/*"
+        "arn:aws:s3:::inintca-test-bucket/*"
       ],
       "Effect": "Allow"
     },
@@ -16,7 +16,7 @@
         "s3:ListBucket"
       ],
       "Resource": [
-        "arn:aws:s3:::inindca-public"
+        "arn:aws:s3:::nintca-test-bucket"
       ],
       "Effect": "Allow"
     }
