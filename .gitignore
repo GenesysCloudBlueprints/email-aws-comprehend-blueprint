@@ -1,0 +1,20 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Webpack directories
+.webpack
+
+# Terraform files
+.terraform
+.terraform.lock.hcl
+
+# .env
+.env.dev
+.env.local
+
+#Archy results 
+components/genesys-email-flow/modules/email_flow/scripts/output/results.json
