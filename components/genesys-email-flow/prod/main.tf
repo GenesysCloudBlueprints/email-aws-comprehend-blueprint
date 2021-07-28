@@ -1,6 +1,6 @@
 terraform {
   backend "local" {
-    path = "/Users/johncarnell/genesys_terraform/carnell1_dev/tfstate"
+    path = "/Users/johncarnell/genesys_terraform/carnell2_prod/tfstate"
   }
 
   required_providers {
