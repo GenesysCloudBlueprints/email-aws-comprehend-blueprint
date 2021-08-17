@@ -45,35 +45,36 @@ This solution requires the following components:
 
 * **Genesys Cloud** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. You deploy the architect email flow, integration, data actions, queues and email configuration in Genesys Cloud. 
 
-* **AWS Comprehend** - AWS Comprehend is an AWS service that lets you train a machine learning model to classify a body of text. Using AWS Comprehend requires you to first train a classification model and then expose AWS endpoint to allow the service to be invoke for real-time analysis
+* **Amazon Comprehend** - An AWS service that uses natural-language processing (NLP) to extract insights about the contents of documents. It develops insights by recognizing the entities, key phrases, language, sentiments, and other common elements in a document. You can train the machine learning model to classify a body of text, create endpoint and expose the endpoint to allow the service to be invoked for real-time analysis.
 
-* **AWS API Gateway and AWS Lambda** - The AWS API gateway is used to exposed a REST endpoint that is protected by an API key. Requests coming into the API gateway are forwarded to an AWS Lambda (written in Typescript) that will process the request and call the AWS Comprehend endpoint classified defined in the previous bullet.
+* **AWS Lambda** - A compute service that lets you run code without provisioning or managing servers. You organize your code into Lambda functions. Lambda runs your function only when needed. You use Amazon API Gateway that routes the request to your Lambda function.
+
+* **Amazon API Gateway** - An AWS service for creating, publishing, maintaining, monitoring, and securing REST, HTTP, and WebSocket APIs at any scale. The gateway exposes the REST endpoint to route the requests to AWS Lambda. 
 
 ## Prerequisites
 
 ### Specialized knowledge
 
 * Administrator-level knowledge of Genesys Cloud
-* AWS Cloud Practitioner-level knowledge of AWS IAM, AWS Comprehend, and AWS API Gateway, AWS Lambda, and the AWS JavaScript SDK
+* AWS Cloud Practitioner-level knowledge of AWS IAM, Amazon Comprehend, Amazon API Gateway, AWS Lambda, and the AWS SDK for JavaScript
 * Experience using the Genesys Cloud Platform API and Genesys Cloud Python SDK
 
 ### Genesys Cloud account
 
 * A Genesys Cloud license. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the Genesys Cloud pricing page") in the Genesys website.
 * Master Admin role. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
-* Install the latest Terraform binary. For more information about installing Terraform, see [Download Terraform](https://www.terraform.io/downloads.html "Opens the Download Terraform page") in the Terraform . 
-* **Install Archy**. Install the latest Genesys Cloud Archy import/export tool. Instructions for installing Archy can be found [here](https://developer.genesys.cloud/devapps/archy/).
-* **Install Python 3.7**. This Terraform flow wrappers an Archy call using Python 3.7+. Please make sure you have Python installed.
-* **Install the Genesys Cloud python SDK**. The python script that calls Archy also uses our Genesys Cloud python SDK. Instructions for installing the Genesys Cloud python SDK can be found [here](https://developer.genesys.cloud/api/rest/client-libraries/python/).
-  
+* **Terraform** - Install the latest Terraform binary. For more information about installing Terraform, see [Download Terraform](https://www.terraform.io/downloads.html "Opens the Download Terraform page") in the Terraform website. 
+* **Archy** - Install the latest Genesys Cloud Archy import and export tool. For more information about the instructions for installing Archy, see [Archy Installation](https://developer.genesys.cloud/devapps/archy/ "Opens the Archy Installation page") in the Genesys Cloud Developer Center.
+* **Python 3.7** - Install Python 3.7 or later version as the Terraform flow wrappers an Archy call using Python 3.7.
+* **Genesys Cloud Platform API Client SDK - Python** - The Python script that calls Archy also uses Platform API Client SDK - Python. For more information about installation instruction, see [Platform API Client SDK - Python](https://developer.genesys.cloud/api/rest/client-libraries/python/ "Opens the Platform API Client SDK - Python page").
 
 ### AWS account
 
-* A user account with Administrator Access permission and full access to the following services:
-  * IAM service
-  * AWS Comprehend service
-  * AWS API gateway service
-  * AWS Lambda service
+* A user account with administrator access and permission to access the following services:
+  * AWS Identity and Access Management (IAM)
+  * Amazon Comprehend
+  * Amazon API Gateway
+  * AWS Lambda
 * AWS credentials. For more information on setting up your AWS credentials on your local machine see [here](https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html).
 * Download and install the AWS CLI. For more information on installing the AWS CLI on your local machine see [here](https://aws.amazon.com/cli/).
 * Install the Serverless framework on the machine you are going to run this deploy from. The documentation for downloading and installing the Serverless framework can be found here.
@@ -88,8 +89,7 @@ This solution requires the following components:
 
 ### Clone the GitHub repository
 
-Clone the GitHub repository [
-email-aws-comprehend-blueprint](https://github.com/GenesysCloudBlueprints/email-aws-comprehend-blueprint "Opens the GitHub repository") to your local machine. The `email-aws-comprehend-blueprint/components` folder comprises the necessary scripts and files required for the solution offered by this blueprint. The three major sub-folders are:
+Clone the GitHub repository [email-aws-comprehend-blueprint](https://github.com/GenesysCloudBlueprints/email-aws-comprehend-blueprint "Opens the GitHub repository") to your local machine. The `email-aws-comprehend-blueprint/components` folder comprises the necessary scripts and files required for the solution offered by this blueprint. The three major sub-folders are:
   - `components/aws-comprehend`
   - `components/aws-classifier-lambda`
   - `components/genesys-email-flow`
@@ -139,7 +139,7 @@ Train an AWS Comprehend machine learning classifier to classify the email messag
     `aws comprehend list-endpoints` 
     :::
     Check for the endpoint named `emailclassifier`. When the `Status` attribute is set to `IN_SERVICE`, the classifier is ready for use.  Make a note of the `EndpointArn` attribute for the `emailclassifier` endpoint that you created. 
-    This value will need to be set when you are deploying the classifier lambda later on in the blueprint.
+    This value will need to be set when you are deploying the classifier Lambda later on in the blueprint.
 
 6. Test the classifier using the following command:
 
