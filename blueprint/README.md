@@ -23,14 +23,14 @@ The solution is to use the Genesys Cloud Architect email flow that processes the
 
 The following illustration shows the components that are involved in the solution:
   1. A customer sends an email to the services. 
-  2. The email flow uses the Genesys Cloud [data action](https://help.mypurecloud.com/articles/about-the-data-actions-integrations/) to invoke a REST-based service, and sends the email body and subject to the REST service for classification.
-  3. [Amazon API gateway](https://aws.amazon.com/api-gateway/), an AWS service, exposes the REST service. The API gateway forwards the request to [AWS Lambda](https://aws.amazon.com/lambda/) to process the classification request. Lambda invokes the [AWS Comprehend](https://aws.amazon.com/comprehend/) classifier endpoint to classify the contents of the email body in real time. If the Lambda is able to classify the email at a 75 percent confidence or better level, it returns one of the three categories back to the email flow: 401K, IRA, or 529. Then, the email flow looks up for the queue ID and routes the email to the queue. If the classifier cannot reach this level of confidence, then the REST service returns an empty string and the call flow falls back to a general support queue.
+  2. The email flow uses the Genesys Cloud [data action](https://help.mypurecloud.com/articles/about-the-data-actions-integrations/ "Opens the data actions integrations article") to invoke a REST-based service, and sends the email body and subject to the REST service for classification.
+  3. [Amazon API gateway](https://aws.amazon.com/api-gateway/ "Opens the Amazon API gateway page"), an AWS service, exposes the REST service. The API gateway forwards the request to [AWS Lambda](https://aws.amazon.com/lambda/ "Opens the AWS Lambda page") to process the classification request. Lambda invokes the [Amazon Comprehend](https://aws.amazon.com/comprehend/ "Opens the Amazon Comprehend page") classifier endpoint to classify the contents of the email body in real time. If the Lambda is able to classify the email at a 75 percent confidence or better level, it returns one of the three categories back to the email flow: 401K, IRA, or 529. Then, the email flow looks up for the queue ID and routes the email to the queue. If the classifier cannot reach this level of confidence, then the REST service returns an empty string and the call flow falls back to a general support queue.
    
   4. The flow takes the returned classification, looks up the queue with the same name, and then routes the email to the targeted queue.
   5. When agents receive the email, they respond to the customer directly from the Genesys Cloud application.
 
 
-![Email Routing and Classification using AWS Comprehend](images/EmailClassifier.png "Routing and Classification using AWS Comprehend")
+![Email Routing and Classification using Genesys Cloud and Amazon Comprehend](images/EmailClassifier.png "Routing and Classification using AWS Comprehend")
 
 ## Contents
 
@@ -75,9 +75,9 @@ This solution requires the following components:
   * Amazon Comprehend
   * Amazon API Gateway
   * AWS Lambda
-* AWS credentials. For more information about setting up your AWS credentials on your local machine, see [About credential providers](https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html) in AWS documentation.
-* Download and install the AWS CLI. For more information about installing the AWS CLI on your local machine, see [About credential providers](https://aws.amazon.com/cli/) in the AWS documentation.
-* Install the Serverless framework on the local machine that you are going to run the deployment. The documentation for downloading and installing the Serverless framework can be found here.
+* AWS credentials. For more information about setting up your AWS credentials on your local machine, see [About credential providers](https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html "Opens the About credential providers page") in AWS documentation.
+* Download and install the AWS CLI. For more information about installing the AWS CLI on your local machine, see [About credential providers](https://aws.amazon.com/cli/ "Opens the About credential providers page") in the AWS documentation.
+* Install the Serverless Framework on the local machine that you are going to run the deployment. For more information about downloading and installing the Serverless Framework, see [Get started with Serverless Framework](https://www.serverless.com/framework/docs/getting-started/ "Opens the Serverless Framework page") in the Serverless Framework documentation.
 * [Install NodeJS](https://github.com/nvm-sh/nvm "Opens the NodeJS GitHub repository"). This blueprint recommends NodeJS version 14.15.0.
 
 ## Implementation steps
@@ -139,7 +139,7 @@ To classify the email messages that are sent from the Genesys Cloud Architect em
     `aws comprehend list-endpoints` 
     :::
 
-    Check for the endpoint named `emailclassifier`. When the `Status` attribute is set to `IN_SERVICE`, the classifier is ready for use. Make a note of the `EndpointArn` attribute for the `emailclassifier` endpoint that you created. 
+    Check for the endpoint named `emailclassifier`. When the `Status` attribute is set to `IN_SERVICE`, the classifier is ready for use. Make a note of the `EndpointArn` attribute for the `emailclassifier` endpoint that you have created. 
     This value will need to be set when you are deploying the classifier Lambda later on in the blueprint.
 
 6. Test the classifier using the following command:
@@ -334,9 +334,9 @@ The email with a request for IRA information is sent to the IRA queue.
 
 ## Additional resources
 
-* [AWS Comprehend](https://aws.amazon.com/comprehend/ "Opens the Amazon AWS Comprehend documentation")
-* [AWS API Gateway](https://aws.amazon.com/api-gateway/ "Opens the Amazon AWS API Gateway documentation")
-* [AWS Lambda](https://aws.amazon.com/translate/ "Opens the Amazon AWS API Lambda documentation")
-* [CX as Code](https://developer.genesys.cloud/api/rest/CX-as-Code/ "Opens the Genesys Cloud documentation on CX as Code")
-* [CX as Code Terraform Registry Documentation](https://registry.terraform.io/providers/MyPureCloud/genesyscloud/latest/docs "Opens the CX as Code Terraform Registry documentation")
-* [Serverless Framework](https://www.serverless.com/ "Opens the Serverless Framework documentation")
+* [Amazon Comprehend](https://aws.amazon.com/comprehend/ "Opens the Amazon Comprehend page") in the Amazon featured services
+* [Amazon API Gateway](https://aws.amazon.com/api-gateway/ "Opens the Amazon API Gateway page") in the Amazon featured services
+* [AWS Lambda](https://aws.amazon.com/translate/ "Opens the Amazon AWS Lambda page") in the Amazon featured services
+* [CX as Code](https://developer.genesys.cloud/api/rest/CX-as-Code/ "Opens the CX as Code page") in the Genesys Cloud Developer Center
+* [Terraform Registry Documentation](https://registry.terraform.io/providers/MyPureCloud/genesyscloud/latest/docs "Opens the Genesys Cloud provider page") in the Terraform documentation
+* [Serverless Framework](https://www.serverless.com/ "Opens the Serverless Framework page") in the Serverless Framework website
