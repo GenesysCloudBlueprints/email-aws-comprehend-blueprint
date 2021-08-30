@@ -45,11 +45,13 @@ This solution requires the following components:
 
 * **Genesys Cloud** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. You deploy the Architect email flow, integration, data actions, queues, and email configuration in Genesys Cloud. 
 
-* **Amazon Comprehend** - An AWS service that uses natural-language processing (NLP) to extract insights about the contents of documents. It develops insights by recognizing the entities, key phrases, language, sentiments, and other common elements in a document. You can train the machine learning model to classify a body of text, create an endpoint, and expose the endpoint to invoke the service for real-time analysis.
+* **Amazon Comprehend** - An AWS service that uses natural-language processing (NLP) to analyze and interpret the content of text documents. In this solution, you use AWS Comprehend to train a machine learning model that classifies the contents of inbound emails in real-time. You can train the machine learning model to classify a body of text, create an endpoint, and expose the endpoint to invoke the service for real-time analysis.
 
-* **AWS Lambda** - A compute service that lets you run code without provisioning or managing servers. You organize your code into Lambda functions. Lambda runs your function only when needed. You use the Amazon API Gateway that routes the request to your Lambda function.
+* **AWS Lambda** - A serverless computing service for running code without creating or maintaining the underlying infrastructure. In this solution, AWS Lambda processes requests that come through the API Gateway and calls the Amazon Comprehend endpoint.
 
-* **Amazon API Gateway** - An AWS service for creating, publishing, maintaining, monitoring, and securing REST, HTTP, and WebSocket APIs at any scale. The gateway exposes the REST endpoint to route the requests to AWS Lambda. 
+* **Amazon API Gateway** - An AWS service for using APIs in a secure and scalable environment. In this solution, the API Gateway exposes a REST endpoint that is protected by an API key. Requests that comes to the API Gateway are forwarded to an AWS Lambda.
+
+* **AWS Command Line Interface (CLI)** - A unified tool to manage your AWS services from the command line.
 
 ## Prerequisites
 
@@ -223,9 +225,9 @@ We use Genesys Cloud CX as Code, Genesys Cloud Python SDK, and Genesys Cloud's A
 
 To deploy the email flow:
 
-1. Set up your credentials and AWS regions 
-2. Set the CX as Code `flow.auto.tfvars` file
-3. Configure your Terraform backend
+1. [Set up your credentials and AWS regions](#set-up-your-credentials-and-aws-regions "Goes to the Set up your credentials and AWS regions section")
+2. [Set the CX as Code `flow.auto.tfvars` file](#set-the-cx-as-code-flowautotfvars-file "Goes to the Set the CX as Code `flow.auto.tfvars` file section")
+3. [Configure your Terraform backend](#configure-the-terraform-environment "Goes to the Configure your Terraform backend section")
 4. Initialize Terraform
 5. Apply your Terraform changes
 
@@ -318,8 +320,9 @@ To teardown all the objects created by these flows, run the following command:
 
 You can now log in to your Genesys Cloud org and view all the queues, integration, data action, email flow, email domains, and routes that are created.
 :::primary
-**Note**:  The Terraform scripts attempt to create an email domain route. By default, Genesys Cloud only allows two email domain route per organization. If you already have a domain route, then use the email ID of that existing route in this script. Alternatively, you can also contact the Genesys Cloud [CARE](https://help.mypurecloud.com/articles/contact-genesys-cloud-care/) team and make a request to increase the rate limit for the organization.
+**Note**:  The Terraform scripts attempt to create an email domain route. By default, Genesys Cloud only allows two email domain route per organization. If you already have a domain route, then use the email ID of that existing route in this script. Alternatively, you can also contact the [Genesys Cloud Customer Care](https://help.mypurecloud.com/articles/contact-genesys-cloud-care/ "Opens the Genesys Cloud Customer Care article") team and make a request to increase the rate limit for the organization.
 :::
+
 ### Test the deployment
 
 To check the setup success, you can send an email to your classifier and route the email to the appropriate queue. For example, you can send an email with any of the following questions about IRA:
