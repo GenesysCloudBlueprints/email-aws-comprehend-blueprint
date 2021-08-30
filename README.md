@@ -1,9 +1,13 @@
-# Genesys Cloud Email Routing and Classification using AWS Comprehend
+# Classify and route emails with Amazon Comprehend
 
-> View the full [Genesys Cloud Email Routing and Classification using AWS Comprehend](https://developer.mypurecloud.com/blueprints/) article on the Genesys Cloud Developer Center.
+> View the full [Classify and route emails with Amazon Comprehend](https://developer.mypurecloud.com/blueprints/) article on the Genesys Cloud Developer Center.
 
-This Genesys Cloud Developer blueprint provides instructions for building a Genesys Cloud email flow that leverages an AWS Comprehend machine learning classifier to classify an email and map the email to a routing queue specific to that email classification. 
+This Genesys Cloud Developer Blueprint explains how to use Amazon Comprehend's Natural Language Processing (NLP) to classify inbound emails so they can be routed to a specific queue.
 
-In this blueprint we will demonstrate how to train a AWS Machine Learning classifier, leverage AWS Api Gateway and Lambda to build a microservice to provide email classification, and leverage `CX as Code` to deploy all of the Genesys Cloud objects needed to build and support this email flow.
+This blueprint also demonstrates how to:
+* Use machine learning to train the Amazon Comprehend classifier
+* Use AWS Lambda to build a microservice, which invokes the Amazon Comprehend classifier
+* Use the Amazon API Gateway to expose a the Amazon Comprehend REST endpoint
+* Use the CX as Code configuration tool to deploy all of the required Genesys Cloud objects, including the Architect inbound email flow
 
 ![Email Routing and Classification using AWS Comprehend](blueprint/images/EmailClassifierNoNumbers.png "Routing and Classification using AWS Comprehend")
