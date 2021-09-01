@@ -26,8 +26,8 @@ Amazon Comprehend uses Natural Language Processing to analyze the contents of in
 The following illustration highlights these steps in the workflow:
 
 1. A customer sends an email to your call center.
-2. The Architect inbound email flow uses a Genesys Cloud data action to invoke a REST-based service that sends the email body and subject to the REST service for classification. ***QUESTION: Is this a data action or a data action integration***?
-3. The Amazon API Gateway, an AWS service, exposes the REST service. The gateway forwards the request to an AWS Lambda to process the classification request. Lambda invokes the Amazon Comprehend classifier endpoint to classify the contents of the email body in real time. If the Lambda is able to classify the email at a 75 percent confidence or better level, it returns one of these three categories back to the email flow: 401K, IRA, or 529. If the classifier can't reach this level of confidence, then it returns an empty string
+2. The Architect inbound email flow uses a Genesys Cloud data action to invoke a REST-based service that sends the email body and subject to the REST service for classification.
+3. The Amazon API Gateway, an AWS service, exposes the REST service. The gateway forwards the request to an AWS Lambda to process the classification request. Lambda invokes the Amazon Comprehend classifier endpoint to classify the contents of the email body in real time. If the Lambda is able to classify the email at a 75 percent confidence or better level, it returns one of these three categories back to the email flow: 401K, IRA, or 529. If the classifier can't reach this level of confidence, then it returns an empty string.
 4. The Architect flow receives the classification, looks up the corresponding queue name, and then routes the email to the targeted queue. If the flow receives an empty string, it routes the email to a general support queue.
 5. After an agent receives the email, they respond to the customer directly from Genesys Cloud.
 
@@ -42,7 +42,7 @@ The following illustration highlights these steps in the workflow:
 
 ## Solution components
 
-* **Genesys Cloud** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. In this solution, you use an Architect inbound email flow, integration, data action, queues, and email configuration in Genesys Cloud.
+* **Genesys Cloud** - A suite of Genesys Cloud services for enterprise-grade communications, collaboration, and contact center management. In this solution, you use an Architect inbound email flow, integration, data action, queues, and email configuration in Genesys Cloud.
 * **Amazon API Gateway** - An AWS service for using APIs in a secure and scalable environment. In this solution, the API Gateway exposes a REST endpoint that is protected by an API key. Requests that come to the gateway are forwarded to an AWS Lambda.
 * **AWS Lambda** - A serverless computing service for running code without creating or maintaining the underlying infrastructure. In this solution, AWS Lambda processes requests that come through the Amazon API Gateway and calls the Amazon Comprehend endpoint.  
 * **Amazon Comprehend** - An AWS service that uses natural-language processing (NLP) to analyze and interpret the content of text documents. In this solution, you use Amazon Comprehend to train a machine learning model that does real-time classification of inbound emails so they can be routed to the appropriate queue.
@@ -77,7 +77,7 @@ The following illustration highlights these steps in the workflow:
 * AWS CLI. For more information about installing the AWS CLI on your local machine, see [About credential providers](https://aws.amazon.com/cli/ "Opens the About credential providers page") in the AWS documentation.
 
 ### Development tools running in your local environment
-* Serverless Framework running on the machine where you will deploy the solution. For more information see [Get started with Serverless Framework](https://www.serverless.com/framework/docs/getting-started/ "Opens the Serverless Framework page") in the Serverless Framework documentation.
+* Serverless Framework running on the machine where you'll deploy the solution. For more information, see [Get started with Serverless Framework](https://www.serverless.com/framework/docs/getting-started/ "Opens the Serverless Framework page") in the Serverless Framework documentation.
 * Terraform (the latest binary). For more information, see [Download Terraform](https://www.terraform.io/downloads.html "Opens the Download Terraform page") in the Terraform website.
 * NodeJS version 14.15.0. For more information, see [Install NodeJS](https://github.com/nvm-sh/nvm "Opens the NodeJS GitHub repository").  
 * Python 3.7 or later. For more information, see [Python downloads](https://www.python.org/downloads/ "Goes to the Python Downloads website").
@@ -228,7 +228,7 @@ Deploy the microservice that passes the email body from the Genesys Cloud Archit
     --header 'X-API-Key: <<YOUR API KEY HERE>>' \
     --data-raw '{
       "EmailSubject": "Question about IRA",
-      "EmailBody": "Hi guys,\r\n\r\nI have some questions about my IRA?  \r\n\r\n1.  Can I rollover my existing 401K to my IRA.  \r\n2.  Is an IRA tax-deferred? \r\n3.  Can I make contributions from my IRA to a charitable organization?\r\n4.  Am I able to borrow money from my IRA?\r\n5.  What is the minimum age I have to be to start taking money out of my IRA?\r\n\r\nThanks,\r\n   John"
+      "EmailBody": "Hi guys,\r\n\r\nI have some questions about my IRA?  \r\n\r\n1.  Can I rollover my existing 401K to my IRA.  \r\n2.  Is an IRA tax-deferred? \r\n3.  Can I make contributions from my IRA to a charitable organization?\r\n4.  Am I able to borrow money from my IRA?\r\n5.  What is the minimum age I have to be to start taking money out of my IRA?\r\n\r\nThanks,\r\n   John Doe"
     }'
     ```
 
@@ -316,7 +316,7 @@ Terraform requires a backend for storing the state. In this blueprint, the backe
 ```
 terraform {
   backend "local"  {
-      path ="/Users/<username>/genesys_terraform/carnell1_dev/tfstate"   
+      path ="/Users/johndoe/genesys_terraform/johndoe_dev/tfstate"   
   }
 .....  # Code not displayed for conciseness
 }
@@ -324,21 +324,21 @@ terraform {
 
 ### Initialize Terraform
 
-Before you run CX as Code for the first time you must initialize Terraform.
+Before you run CX as Code for the first time, you must initialize Terraform.
 
-Change to the `components/genesys-email-flow/dev` directory and initialize Terraform:
-
-  ```
-   terraform init
-  ```
+1. Change to the `components/genesys-email-flow/dev` directory and initialize Terraform:
+   
+    ```
+    terraform init
+    ```
 
 ### Apply your Terraform changes
 
-Create all of the Genesys Cloud objects:
+1. Create all of the Genesys Cloud objects:
 
-  ```  
+    ```  
     terraform apply --auto-approve
-  ```
+   ```
 
 You can now log in to your Genesys Cloud org and view all the queues, integration, data action, email flow, email domains, and routes that are created.
 
@@ -348,11 +348,11 @@ You can now log in to your Genesys Cloud org and view all the queues, integratio
 
 ### Test the deployment
 
-Send an email to the configured email domain route and check for the email in the appropriate queue.
+Send an email to the configured email domain route and check whether the appropriate agent has received the email.
 
  For example, you can send an email with any of the following questions about IRA:
 
-- Can I rollover my existing 401K to my IRA.
+- Can I rollover my existing 401K to my IRA?
 - Is an IRA tax-deferred?
 - Can I make contributions from my IRA to a charitable organization?
 - Am I able to borrow money from my IRA?
@@ -362,13 +362,13 @@ The email with a request for IRA information is sent to the IRA queue.
 
 ### Clean up the Genesys Cloud org
 
-If you want to clean up the org and remove all the objects created by the email flow, then use:
+Optionally, you can clean up the org and remove all the objects created by the email flow:
 
-    ```
+  ```
     terraform destroy --auto-approve
-    ```
+  ```
 :::primary
-**Important**: You can't recover the objects once they are destroyed.
+**Important**: You can't recover the objects once they're destroyed.
 :::
 
 ## Additional resources
