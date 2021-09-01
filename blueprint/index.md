@@ -12,22 +12,22 @@ summary: |
 This Genesys Cloud Developer Blueprint explains how to use Amazon Comprehend's Natural Language Processing (NLP) to classify inbound emails so they can be routed to a specific queue.
 
 This blueprint also demonstrates how to:
-* Use machine learning to train the Amazon Comprehend classifier
-* Use AWS Lambda to build a microservice, which invokes the Amazon Comprehend classifier
-* Use the Amazon API Gateway to expose a the Amazon Comprehend REST endpoint
-* Use the CX as Code configuration tool to deploy all of the required Genesys Cloud objects, including the Architect inbound email flow
+* Use machine learning to train the Amazon Comprehend classifier.
+* Use AWS Lambda to build a microservice, which invokes the Amazon Comprehend classifier.
+* Use the Amazon API Gateway to expose the Amazon Comprehend REST endpoint.
+* Use the CX as Code configuration tool to deploy all the required Genesys Cloud objects, including the Architect inbound email flow.
 
 ## Scenario
-A large financial services business has product offerings for 401Ks, IRAs, and 529 college savings accounts. It has three distinct contact center groups with agents who specialize in each of these financial service products. The business wants to improve how inbound emails are sorted and routed to agents in order to improve customer service.
+A large financial services business has product offerings for 401Ks, IRAs, and 529 college savings accounts. It has three distinct contact center groups with agents who specialize in each of these financial service products. The business wants to improve how inbound emails are sorted and routed to agents to improve customer service.
 
 ## Solution
-Amazon Comprehend uses Natural Language Processing to analyze the contents of inbound emails and assign each email a classification. An Architect inbound email flow uses the classification to route each email to the appropriate queue. If an email cannot be classified, then Architect routes it to a general support queue.
+Amazon Comprehend uses Natural Language Processing to analyze the contents of inbound emails and assign each email a classification. An Architect inbound email flow uses the classification to route each email to the appropriate queue. If an email can't be classified, then Architect routes it to a general support queue.
 
 The following illustration highlights these steps in the workflow:
 
 1. A customer sends an email to your call center.
 2. The Architect inbound email flow uses a Genesys Cloud data action to invoke a REST-based service that sends the email body and subject to the REST service for classification. ***QUESTION: Is this a data action or a data action integration***?
-3. The Amazon API Gateway, an AWS service, exposes the REST service. The gateway forwards the request to an AWS Lambda to process the classification request. Lambda invokes the Amazon Comprehend classifier endpoint to classify the contents of the email body in real time. If the Lambda is able to classify the email at a 75 percent confidence or better level, it returns one of these three categories back to the email flow: 401K, IRA, or 529. If the classifier cannot reach this level of confidence, then it returns an empty string
+3. The Amazon API Gateway, an AWS service, exposes the REST service. The gateway forwards the request to an AWS Lambda to process the classification request. Lambda invokes the Amazon Comprehend classifier endpoint to classify the contents of the email body in real time. If the Lambda is able to classify the email at a 75 percent confidence or better level, it returns one of these three categories back to the email flow: 401K, IRA, or 529. If the classifier can't reach this level of confidence, then it returns an empty string
 4. The Architect flow receives the classification, looks up the corresponding queue name, and then routes the email to the targeted queue. If the flow receives an empty string, it routes the email to a general support queue.
 5. After an agent receives the email, they respond to the customer directly from Genesys Cloud.
 
@@ -42,13 +42,13 @@ The following illustration highlights these steps in the workflow:
 
 ## Solution components
 
-* **Genesys Cloud** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. In this solution, you use an Architect inbound email flow, integration, data actions, queues, and email configuration in Genesys Cloud. ***QUESTION: Please confirm: integration, data actions (plural; or is this a data action integration?), and email configuration***
-* **Amazon API Gateway** - An AWS service for using APIs in a secure and scalable environment. In this solution, the API Gateway exposes a REST endpoint that is protected by an API key. Requests that comes to the gateway are forwarded to an AWS Lambda.
+* **Genesys Cloud** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. In this solution, you use an Architect inbound email flow, integration, data action, queues, and email configuration in Genesys Cloud.
+* **Amazon API Gateway** - An AWS service for using APIs in a secure and scalable environment. In this solution, the API Gateway exposes a REST endpoint that is protected by an API key. Requests that come to the gateway are forwarded to an AWS Lambda.
 * **AWS Lambda** - A serverless computing service for running code without creating or maintaining the underlying infrastructure. In this solution, AWS Lambda processes requests that come through the Amazon API Gateway and calls the Amazon Comprehend endpoint.  
 * **Amazon Comprehend** - An AWS service that uses natural-language processing (NLP) to analyze and interpret the content of text documents. In this solution, you use Amazon Comprehend to train a machine learning model that does real-time classification of inbound emails so they can be routed to the appropriate queue.
 
 :::primary
-**Important**: AWS CloudFormation does not support the Amazon Comprehend API.
+**Important**: AWS CloudFormation doesn't support the Amazon Comprehend API.
 :::
 
 ## Prerequisites
@@ -135,35 +135,35 @@ To classify the inbound email messages, you must first train and deploy an Amazo
 
 5. Train the Amazon Comprehend document classifier:
 
-  ```
-  aws comprehend create-document-classifier --document-classifier-name FinancialServices --data-access-role-arn <<ARN FROM STEP 2 HERE>> --input-data-config S3Uri=s3://<<YOUR BUCKET NAME HERE>> --language-code en
-  ```
-  It takes several minutes for Amazon Comprehend to train the classifier, and you can proceed to the next step only after the training is completed. To check the status of the classifier, use the command:
+    ```
+    aws comprehend create-document-classifier --document-classifier-name FinancialServices --data-access-role-arn <<ARN FROM STEP 2 HERE>> --input-data-config S3Uri=s3://<<YOUR BUCKET NAME HERE>> --language-code en
+    ```    
+    It takes several minutes for Amazon Comprehend to train the classifier, and you can proceed to the next step only after the training is completed. To check the status of the classifier, use the command:
 
-   ```
-   aws comprehend list-document-classifiers
-   ```
+    ```
+    aws comprehend list-document-classifiers
+    ```
 
-  When the `Status` attribute returns `TRAINED`, your classifier training is complete. Make a note of the `DocumentClassifierArn` value to use in the next step.
+    When the `Status` attribute returns `TRAINED`, your classifier training is complete. Make a note of the `DocumentClassifierArn` value to use in the next step.
 
 6. Create the real-time document classifier endpoint:
 
-  ```
-  aws comprehend create-endpoint --endpoint-name emailclassifier --model-arn <<YOUR DocumentClassifierArn here>> --desired-inference-units 1
-  ```
+    ```
+    aws comprehend create-endpoint --endpoint-name emailclassifier --model-arn <<YOUR DocumentClassifierArn here>> --desired-inference-units 1
+    ```
 
-  It takes several minutes for the real-time classifier endpoint to activate. To monitor the status of the endpoint, use the command:
+    It takes several minutes for the real-time classifier endpoint to activate. To monitor the status of the endpoint, use the command:
 
-  ```
-  aws comprehend list-endpoints
-  ```
-  Check for the endpoint named `emailclassifier`. When the `Status` attribute is set to `IN_SERVICE`, the classifier is ready for use. Make a note of the `EndpointArn` attribute for the `emailclassifier` endpoint that you have created. This value will need to be set when you are deploying the classifier Lambda later on in the blueprint.
+    ```
+    aws comprehend list-endpoints
+    ```
+    Check for the endpoint named `emailclassifier`. When the `Status` attribute is set to `IN_SERVICE`, the classifier is ready for use. Make a note of the `EndpointArn` attribute for the `emailclassifier` endpoint that you've created. This value will need to be set when you're deploying the classifier Lambda later on in the blueprint.
 
 7. Test the classifier:
 
-  ```
-  aws comprehend classify-document --text "Hey I had some questions about what I can use my 529 for in regards to my children's college tuition. Can I spend the money on things other then tuition" --endpoint-arn <<YOUR EndpointArn>>
-  ```
+    ```
+    aws comprehend classify-document --text "Hey I had some questions about what I can use my 529 for in regards to my children's college tuition. Can I spend the money on things other then tuition" --endpoint-arn <<YOUR EndpointArn>>
+    ```
 
   If the deployment is successful, a JSON output similar to the following appears:
 
@@ -192,23 +192,23 @@ Deploy the microservice that passes the email body from the Genesys Cloud Archit
 
 1. Create a `.env.dev` file in the `components/aws-classifier-lambda` directory. Add the two parameters, `CLASSIFIER_ARN` and `CLASSIFIER_CONFIDENCE_THRESHOLD` in the file.
   * Set the `CLASSIFIER_ARN` to the `EndpointArn` value noted in the procedure [Train and deploy the AWS Comprehend machine learning classifier](#train-and-deploy-the-aws-comprehend-machine-learning-classifier "Goes to the Train and deploy the AWS Comprehend machine learning classifier section").
-  * Set the `CLASSIFIER_CONFIDENCE_THRESHOLD` parameter value between 0 and 1 to signify the level of confidence that you want the classifier to reach before a classification is returned. For example, if `CLASSIFIER_CONFIDENCE_THRESHOLD` is set to 0.75, then the classifier must reach a confidence level of at least 75 percent. If the classifier cannot reach this threshold, then an empty string is returned.
+  * Set the `CLASSIFIER_CONFIDENCE_THRESHOLD` parameter value between 0 and 1 to signify the level of confidence that you want the classifier to reach before a classification is returned. For example, if `CLASSIFIER_CONFIDENCE_THRESHOLD` is set to 0.75, then the classifier must reach a confidence level of at least 75 percent. If the classifier can't reach this threshold, then an empty string is returned.
 
-  Example `.env.dev` file:
+    Example `.env.dev` file:
 
-  ```
-  CLASSIFIER_ARN=arn:aws:comprehend:us-east-1:000000000000:document-classifier-endpoint/emailclassifier-example-only     CLASSIFIER_CONFIDENCE_THRESHOLD=.75
-  ```
-  :::primary
-  **Tip**: You can also retrieve the `EndpointArn` endpoint value using the command `aws comprehend list-endpoints`.
-  :::
+    ```
+    CLASSIFIER_ARN=arn:aws:comprehend:us-east-1:000000000000:document-classifier-endpoint/emailclassifier-example-only     CLASSIFIER_CONFIDENCE_THRESHOLD=.75
+    ```
+    :::primary
+    **Tip**: You can also retrieve the `EndpointArn` endpoint value using the command `aws comprehend list-endpoints`.
+    :::
 
 2. Open a command prompt and change to the directory `/components/aws-classifier-lambda`.
 3. Download and install all the third-party packages and dependencies:
 
-  ```
-  npm i
-  ```
+    ```
+    npm i
+    ```
 
 4. Deploy the Lambda function:
 
@@ -216,21 +216,21 @@ Deploy the microservice that passes the email body from the Genesys Cloud Archit
    serverless deploy
    ```
 
-    The deployment takes approximately a minute to complete. Make a note of the `api key` and `endpoints` attributes. You will need them when you deploy the Genesys Cloud inbound flow.
+    The deployment takes approximately a minute to complete. Make a note of the `api key` and `endpoints` attributes. You'll need them when you deploy the Genesys Cloud inbound flow.
 
 5. Test the Lambda function:
 
-  ```shell
-  curl --location --request POST '<<YOUR API GATEWAY HERE>>' \
-  --header 'Accept: application/json' \
-  --header 'Content-Type: application/json' \
-  --header 'x-amazon-apigateway-api-key-source: HEADER' \
-  --header 'X-API-Key: <<YOUR API KEY HERE>>' \
-  --data-raw '{
+    ```shell
+    curl --location --request POST '<<YOUR API GATEWAY HERE>>' \
+    --header 'Accept: application/json' \
+    --header 'Content-Type: application/json' \
+    --header 'x-amazon-apigateway-api-key-source: HEADER' \
+    --header 'X-API-Key: <<YOUR API KEY HERE>>' \
+    --data-raw '{
       "EmailSubject": "Question about IRA",
       "EmailBody": "Hi guys,\r\n\r\nI have some questions about my IRA?  \r\n\r\n1.  Can I rollover my existing 401K to my IRA.  \r\n2.  Is an IRA tax-deferred? \r\n3.  Can I make contributions from my IRA to a charitable organization?\r\n4.  Am I able to borrow money from my IRA?\r\n5.  What is the minimum age I have to be to start taking money out of my IRA?\r\n\r\nThanks,\r\n   John"
-  }'
-  ```
+    }'
+    ```
 
 If the deployment is successful, you receive a JSON payload that lists the classification of the document along with the confidence level. For example:
 
@@ -304,18 +304,10 @@ The `components/genesys-email-flow/dev/flow.auto.tfvars` file contains all appli
    **Note**: Your `genesys_email_domain_region` must be in the same region as your Genesys Cloud organization.
    :::
 
-This file contains a script that creates an inbound email route called `support` to which the users can send emails. For example, if you set your `genesys_email_domain` to `devengagedev` and `genesys_email_domain_region` to `pure.cloud`, then the `CX as Code` script creates an email route `support@devengagedev.pure.cloud`. Any emails sent to this address are processed by the email flow.
+  This file contains a script that creates an inbound email route called `support` to which the users can send emails. For example, if you set your `genesys_email_domain` to `devengagedev` and `genesys_email_domain_region` to `pure.cloud`, then the `CX as Code` script creates an email route `support@devengagedev.pure.cloud`. Any emails sent to this address are processed by the email flow.
 
-***Question: The organization gets confusing here. Please clarify whether the following numbers 1 and 2 are additional parameters (in which case they should be bullets). Finally please confirm the cross-references.***
-
-1. `classifier_url` - The endpoint that invokes the classifier. Use the endpoint that you created when you [trained and deployed the Amazon Comprehend machine learning classifier](#train-and-deploy-the-amazon-comprehend-machine-learning-classifier "Goes to the Train and deploy the Amazon Comprehend machine learning classifier section").
-
-or
-
-that you used when you [deployed the serverless microservice using AWS Lambda and Amazon API Gateway](#deploy-the-serverless-microservice-using-aws-lambda-and-amazon-api-gateway "Goes to the Deploy the serverless microservice using AWS Lambda and Amazon API Gateway section").
-
-
-2. `classifier_api_key`. Use the API key you used to invoke the endpoint  when you [trained and deployed the Amazon Comprehend machine learning classifier](#train-and-deploy-the-amazon-comprehend-machine-learning-classifier "Goes to the Train and deploy the Amazon Comprehend machine learning classifier section"). ***QUESTION***: Same as above. Please confirm.
+* `classifier_url` - The endpoint that invokes the classifier. Use the endpoint that you noted when you deployed the [AWS Lambda function](#deploy-the-serverless-microservice-using-aws-lambda-and-amazon-api-gateway "Goes to the Deploy the serverless microservice using AWS Lambda and Amazon API Gateway section").
+* `classifier_api_key` - The API key that invokes the endpoint. Use the API key that you noted when you deployed the [AWS Lambda function](#deploy-the-serverless-microservice-using-aws-lambda-and-amazon-api-gateway "Goes to the Deploy the serverless microservice using AWS Lambda and Amazon API Gateway section").
 
 ### Configure the Terraform environment
 
@@ -324,7 +316,7 @@ Terraform requires a backend for storing the state. In this blueprint, the backe
 ```
 terraform {
   backend "local"  {
-      path ="/Users/johnc/genesys_terraform/carnell1_dev/tfstate"   
+      path ="/Users/<username>/genesys_terraform/carnell1_dev/tfstate"   
   }
 .....  # Code not displayed for conciseness
 }
@@ -334,27 +326,19 @@ terraform {
 
 Before you run CX as Code for the first time you must initialize Terraform.
 
-1. Change to the `components/genesys-email-flow/dev` directory and initialize Terraform:
+Change to the `components/genesys-email-flow/dev` directory and initialize Terraform:
 
   ```
-  terraform init
+   terraform init
   ```
 
 ### Apply your Terraform changes
 
-1. Create all of the Genesys Cloud objects:
+Create all of the Genesys Cloud objects:
 
   ```  
-  terraform apply --auto-approve
+    terraform apply --auto-approve
   ```
-
-2. To tear down all the objects created by these flows:
-
-  ```
-  terraform destroy --auto-approve
-  ```
-
-***QUESTION*** Why do they need to tear down all the objects right after they create them?
 
 You can now log in to your Genesys Cloud org and view all the queues, integration, data action, email flow, email domains, and routes that are created.
 
@@ -364,9 +348,7 @@ You can now log in to your Genesys Cloud org and view all the queues, integratio
 
 ### Test the deployment
 
-To check the setup success, send an email to your classifier and route the email to the appropriate queue.
-
-***Question*** That sentence reads weird. Would they really send an email to the classifier? And would they manually route the email? (No...) So, could we just delete that intro and start with... "Send an email with any of the following questions about an IRA"
+Send an email to the configured email domain route and check for the email in the appropriate queue.
 
  For example, you can send an email with any of the following questions about IRA:
 
@@ -378,12 +360,23 @@ To check the setup success, send an email to your classifier and route the email
 
 The email with a request for IRA information is sent to the IRA queue.
 
+### Clean up the Genesys Cloud org
+
+If you want to clean up the org and remove all the objects created by the email flow, then use:
+
+    ```
+    terraform destroy --auto-approve
+    ```
+:::primary
+**Important**: You can't recover the objects once they are destroyed.
+:::
+
 ## Additional resources
 
-* [Genesys Cloud data action](https://help.mypurecloud.com/articles/about-the-data-actions-integrations/ "Opens the data actions integrations article")
+* [Genesys Cloud data action](https://help.mypurecloud.com/articles/about-the-data-actions-integrations/ "Opens the data actions integrations article") in the Genesys Cloud Resource Center
 * [Amazon API Gateway](https://aws.amazon.com/api-gateway/ "Opens the Amazon API Gateway page") in the Amazon featured services
 * [AWS Lambda](https://aws.amazon.com/translate/ "Opens the Amazon AWS Lambda page") in the Amazon featured services
-* [Amazon Comprehend classifier endpoint](https://aws.amazon.com/comprehend/ "Opens the Amazon Comprehend page in the Amazon documentation")
+* [Amazon Comprehend](https://aws.amazon.com/comprehend/ "Opens the Amazon Comprehend page") in the Amazon featured services
 * [CX as Code](https://developer.genesys.cloud/api/rest/CX-as-Code/ "Opens the CX as Code page") in the Genesys Cloud Developer Center
 * [Terraform Registry Documentation](https://registry.terraform.io/providers/MyPureCloud/genesyscloud/latest/docs "Opens the Genesys Cloud provider page") in the Terraform documentation
 * [Serverless Framework](https://www.serverless.com/ "Opens the Serverless Framework page") in the Serverless Framework website
