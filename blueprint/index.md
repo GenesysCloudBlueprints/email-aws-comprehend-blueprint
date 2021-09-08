@@ -3,7 +3,7 @@ title: Classify and route emails with Amazon Comprehend
 author: john.carnell
 indextype: blueprint
 icon: blueprint
-image: images/EmailClassiiferNoNumber.png
+image: images/EmailClassiiferNoNumbers.png
 category: 5
 summary: |
   This Genesys Cloud Developer Blueprint explains how to use Amazon Comprehend's Natural Language Processing (NLP) to classify inbound emails so they can be routed to a specific queue.
