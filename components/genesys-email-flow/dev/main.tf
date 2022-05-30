@@ -40,7 +40,7 @@ module "classifier_email_routes" {
   source                      = "../modules/email_routes"
   genesys_email_domain        = var.genesys_email_domain
   genesys_email_domain_region = var.genesys_email_domain_region
-  genesys_email_flow          = "EmailAWSComprehendFlow" // Same name as the flow created by Archy in the classifier_email_flow module
+  genesys_email_flow          = "EmailAWSComprehendFlow"
   depends_on                  = [module.classifier_email_flow]
 }
 

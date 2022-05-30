@@ -10,8 +10,7 @@ terraform {
 #
 # Description:  
 #
-# Last step in the process.  We are going to create the email domain and route.  Since this has to happen after the archy flow,
-# we explicitly create a dependency on the archy flow.
+# Last step in the process.  We are going to create the email domain and route.  
 #
 # Note:  Currently we only allow a two email domain routes per Genesys Cloud organization.  You can contact CARE for an additional email route.  This
 # command will fail if there is already have two email routes present.
