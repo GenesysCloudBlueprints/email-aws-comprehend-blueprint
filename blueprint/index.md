@@ -63,7 +63,6 @@ The following illustration highlights these steps in the workflow:
 
 * A Genesys Cloud license. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the Genesys Cloud pricing page") in the Genesys website.
 * Master Admin role. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
-* Archy. For more information, see [Welcome to Archy](/devapps/archy/ "Goes to the Welcome to Archy page") in the Genesys Cloud Developer Center.
 * Genesys Cloud Platform API Client SDK - Python. For more information, see [Platform API Client SDK - Python](/api/rest/client-libraries/python/ "Goes to the Platform API Client SDK - Python page") in the Genesys Cloud Developer Center.
 
 ### AWS account
@@ -243,7 +242,7 @@ If the deployment is successful, you receive a JSON payload that lists the class
 
 ### Deploy the Genesys Cloud objects
 
-We use Genesys Cloud CX as Code, Genesys Cloud Python SDK, and Genesys Cloud's Archy to deploy all of the Genesys Cloud objects that are used to handle the email flow in this blueprint.
+We use Genesys Cloud CX as Code to deploy all of the Genesys Cloud objects that are used to handle the email flow in this blueprint.
 
 To deploy the email flow:
 
@@ -264,20 +263,6 @@ All the Genesys Cloud OAuth2 credentials and AWS region configuration used by CX
 3. `GENESYSCLOUD_REGION` - The region used by the Genesys Cloud OAuth2 client. For a list of Genesys Cloud regions and the corresponding AWS regions, see [Platform API](https://developer.genesys.cloud/api/rest/ "Opens the Platform API page") in the Genesys Cloud Developer Center.
 
 4. `GENESYSCLOUD_API_REGION` - The Genesys Cloud API endpoint to which the Genesys Cloud SDK connects. For a list of valid values for the `API SERVER` field, see [Platform API](https://developer.genesys.cloud/api/rest/ "Opens the Platform API page") in the Genesys Cloud Developer Center.
-
-5. `GENESYSCLOUD_ARCHY_REGION` - The Genesys Cloud domain name that Archy uses to resolve the Genesys Cloud AWS region to which it connects. Valid locations include:
-
-    - apne2.pure.cloud
-    - aps1.pure.cloud
-    - cac1.pure.cloud
-    - euw2.pure.cloud
-    - mypurecloud.com
-    - mypurecloud.com.au
-    - mypurecloud.de
-    - mypurecloud.ie
-    - mypurecloud.jp
-    - usw2.pure.cloud
-
 
 ### Set up the CX as Code flow.auto.tfvars file
 

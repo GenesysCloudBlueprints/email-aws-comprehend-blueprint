@@ -24,11 +24,6 @@ module "classifier_queues" {
   classifier_queue_members = module.classifier_users.user_ids
 }
 
-module "classifier_email_routes" {
-  source               = "../modules/email_routes"
-  genesys_email_domain = var.genesys_email_domain
-}
-
 module "classifier_data_actions" {
   source             = "../modules/data_actions"
   classifier_url     = var.classifier_url
@@ -37,8 +32,14 @@ module "classifier_data_actions" {
 
 module "classifier_email_flow" {
   source                      = "../modules/email_flow"
-  genesys_email_domain        = var.genesys_email_domain
-  genesys_email_domain_region = var.genesys_email_domain_region
 
   depends_on = [module.classifier_data_actions, module.classifier_queues]
+}
+
+module "classifier_email_routes" {
+  source                      = "../modules/email_routes"
+  genesys_email_domain        = var.genesys_email_domain
+  genesys_email_domain_region = var.genesys_email_domain_region
+  genesys_email_flow          = "EmailAWSComprehendFlow"
+  depends_on                  = [module.classifier_email_flow]
 }
