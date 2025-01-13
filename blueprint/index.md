@@ -85,7 +85,7 @@ The following illustration highlights these steps in the workflow:
 
 1. [Clone the GitHub repository](#clone-the-github-repository "Goes to the Clone the GitHub repository section")
 2. [Train and deploy the AWS Comprehend machine learning classifier](#train-and-deploy-the-aws-comprehend-machine-learning-classifier "Goes to the Train and deploy the AWS Comprehend machine learning classifier section")
-3. [Deploy Amazon API Gateway and AWS Lambda](#deploy-amazon-api-gateway-and-aws-lambda "Goes to the Deploy Amazon API Gateway and AWS Lambda section")
+3. [Deploy the serverless microservice using AWS Lambda and API Gateway](#deploy-the-serverless-microservice-using-aws-lambda-and-api-gateway "Goes to the Deploy Amazon API Gateway and AWS Lambda section")
 4. [Deploy the Genesys Cloud objects](#deploy-the-genesys-cloud-objects "Goes to the Deploy the Genesys Cloud objects section")
 
 ### Clone the GitHub repository
@@ -95,7 +95,7 @@ Clone the GitHub repository [email-aws-comprehend-blueprint](https://github.com/
   - `components/aws-classifier-lambda`
   - `components/genesys-email-flow`
 
-### Train and deploy the Amazon Comprehend machine learning classifier
+### Train and deploy the AWS Comprehend machine learning classifier
 
 To classify the inbound email messages, you must first train and deploy an Amazon Comprehend machine learning classifier. To do this, you can either use the AWS Management Console or the AWS CLI. This blueprint uses the AWS CLI.
 
@@ -185,9 +185,9 @@ To classify the inbound email messages, you must first train and deploy an Amazo
     }
   ```
 
-### Deploy the serverless microservice using AWS Lambda and Amazon API Gateway
+### Deploy the serverless microservice using AWS Lambda and API Gateway
 
-Deploy the microservice that passes the email body from the Genesys Cloud Architect email flow to the Amazon Comprehend classifier. To do this, invoke the AWS Lambda function using the Amazon API Gateway endpoint. The AWS Lambda is built using Typescript and deployed using the [Serverless](https://www.serverless.com/) framework.
+Deploy the microservice that passes the email body from the Genesys Cloud Architect email flow to the Amazon Comprehend classifier. To do this, invoke the AWS Lambda function using the API Gateway endpoint. The AWS Lambda is built using Typescript and deployed using the [Serverless](https://www.serverless.com/) framework.
 
 1. Create a `.env.dev` file in the `components/aws-classifier-lambda` directory. Add the two parameters, `CLASSIFIER_ARN` and `CLASSIFIER_CONFIDENCE_THRESHOLD` in the file.
   * Set the `CLASSIFIER_ARN` to the `EndpointArn` value noted in the procedure [Train and deploy the AWS Comprehend machine learning classifier](#train-and-deploy-the-aws-comprehend-machine-learning-classifier "Goes to the Train and deploy the AWS Comprehend machine learning classifier section").
